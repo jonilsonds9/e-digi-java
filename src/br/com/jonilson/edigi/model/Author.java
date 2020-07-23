@@ -20,7 +20,7 @@ public class Author {
         return name;
     }
 
-    public void setName(String name) {
+    private void setName(String name) {
         if (name == null || name.isEmpty()) {
             throw new IllegalArgumentException("O nome é obrigatório!");
         }
@@ -31,7 +31,7 @@ public class Author {
         return email;
     }
 
-    public void setEmail(String email) {
+    private void setEmail(String email) {
         if (email == null || email.isEmpty() || !validateEmail(email)) {
             throw new IllegalArgumentException("Email informado para o autor é inválido!");
         }
@@ -49,7 +49,7 @@ public class Author {
 
     @Override
     public String toString() {
-        return "Author{" +
+        return "\nAuthor{" +
                 "name='" + name + '\'' +
                 ", email='" + email + '\'' +
                 ", created_at=" + created_at +

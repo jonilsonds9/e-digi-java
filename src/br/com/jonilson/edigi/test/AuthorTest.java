@@ -10,7 +10,7 @@ public class AuthorTest {
             AuthorDao authorDao = new AuthorDao();
 
             Author author = new Author("ana", "ana@gmail.com");
-            Author author1 = new Author("Alice", "ana@gmail.com");
+            Author author1 = new Author("Alice", "alice@gmail.com");
 
             authorDao.add(author);
             authorDao.add(author1);
