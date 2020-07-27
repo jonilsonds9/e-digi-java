@@ -1,16 +1,16 @@
 package br.com.jonilson.edigi.model;
 
-import java.time.ZonedDateTime;
+import java.time.LocalDateTime;
 import java.util.Objects;
 
 public class Category {
 
     private String name;
-    private ZonedDateTime created_at;
+    private LocalDateTime createdAt;
 
     public Category(String name) {
         this.setName(name);
-        this.created_at = ZonedDateTime.now();
+        this.createdAt = LocalDateTime.now();
     }
 
     public String getName() {
@@ -18,7 +18,7 @@ public class Category {
     }
 
     private void setName(String name) {
-        if (name == null || name.isEmpty()) {
+        if (name == null || name.trim().isEmpty()) {
             throw new IllegalArgumentException("O nome é obrigatório!");
         }
         this.name = name;

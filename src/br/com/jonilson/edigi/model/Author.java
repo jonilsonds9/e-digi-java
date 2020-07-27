@@ -1,7 +1,6 @@
 package br.com.jonilson.edigi.model;
 
-import java.time.ZonedDateTime;
-import java.util.Date;
+import java.time.LocalDateTime;
 import java.util.Objects;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -9,12 +8,12 @@ import java.util.regex.Pattern;
 public class Author {
     private String name;
     private String email;
-    private ZonedDateTime created_at;
+    private LocalDateTime createdAt;
 
     public Author(String name, String email) {
         this.setName(name);
         this.setEmail(email);
-        this.created_at = ZonedDateTime.now();
+        this.createdAt = LocalDateTime.now();
     }
 
     public String getName() {
@@ -22,7 +21,7 @@ public class Author {
     }
 
     private void setName(String name) {
-        if (name == null || name.isEmpty()) {
+        if (name == null || name.trim().isEmpty()) {
             throw new IllegalArgumentException("O nome é obrigatório!");
         }
         this.name = name;
@@ -33,7 +32,7 @@ public class Author {
     }
 
     private void setEmail(String email) {
-        if (email == null || email.isEmpty() || !validateEmail(email)) {
+        if (email == null || email.trim().isEmpty() || !validateEmail(email)) {
             throw new IllegalArgumentException("Email informado para o autor é inválido!");
         }
 
@@ -53,7 +52,7 @@ public class Author {
         return "\nAuthor{" +
                 "name='" + name + '\'' +
                 ", email='" + email + '\'' +
-                ", created_at=" + created_at +
+                ", created_at=" + createdAt +
                 '}';
     }
 
