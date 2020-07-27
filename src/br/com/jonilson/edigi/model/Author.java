@@ -1,5 +1,6 @@
 package br.com.jonilson.edigi.model;
 
+import java.time.ZonedDateTime;
 import java.util.Date;
 import java.util.Objects;
 import java.util.regex.Matcher;
@@ -8,12 +9,12 @@ import java.util.regex.Pattern;
 public class Author {
     private String name;
     private String email;
-    private Date created_at;
+    private ZonedDateTime created_at;
 
     public Author(String name, String email) {
         this.setName(name);
         this.setEmail(email);
-        this.created_at = new Date();
+        this.created_at = ZonedDateTime.now();
     }
 
     public String getName() {
