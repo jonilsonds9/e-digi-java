@@ -38,36 +38,24 @@ public class Book {
     }
 
     private void setTitle(String title) {
-        if (this.isNull(title)) {
+        if (title == null || title.trim().isEmpty()) {
             throw new IllegalArgumentException("O título é obrigatório!");
         }
         this.title = title;
     }
 
-    public String getResume() {
-        return resume;
-    }
-
     private void setResume(String resume) {
-        if (this.isNull(resume) || resume.length() < 500) {
+        if (resume == null || resume.trim().isEmpty() || resume.length() < 500) {
             throw new IllegalArgumentException("O resumo é obrigatório e precisa ter pelo menos 500 caracteres!");
         }
         this.resume = resume;
     }
 
-    public String getSummary() {
-        return summary;
-    }
-
     private void setSummary(String summary) {
-        if (this.isNull(summary)) {
+        if (summary == null || summary.trim().isEmpty()) {
             throw new IllegalArgumentException("O sumário é obrigatório e não pode ser vazio!");
         }
         this.summary = summary;
-    }
-
-    public int getNumberPages() {
-        return numberPages;
     }
 
     private void setNumberPages(int numberPages) {
@@ -77,12 +65,8 @@ public class Book {
         this.numberPages = numberPages;
     }
 
-    public String getIsbn() {
-        return isbn;
-    }
-
     private void setIsbn(String isbn) {
-        if (this.isNull(isbn) || !(this.validateIsbn(isbn))) {
+        if (isbn == null || isbn.trim().isEmpty() || !(this.isIsbnValid(isbn))) {
             throw new IllegalArgumentException("O ISBN do livro é obrigatório e precisa no formato '978-xx-xxxxx-xx-x'");
         }
         this.isbn = isbn;
@@ -99,10 +83,6 @@ public class Book {
         this.author = author;
     }
 
-    public Category getCategory() {
-        return category;
-    }
-
     private void setCategory(Category category) {
         if (category == null) {
             throw new IllegalArgumentException("Categoria não informada corretamente!");
@@ -110,19 +90,11 @@ public class Book {
         this.category = category;
     }
 
-    public int getEdition() {
-        return edition;
-    }
-
     private void setEdition(int edition) {
         if (edition <= 0) {
             throw new IllegalArgumentException("A edição precisa ser maior que zero!");
         }
         this.edition = edition;
-    }
-
-    public double getPrice() {
-        return price;
     }
 
     private void setPrice(double price) {
@@ -136,12 +108,7 @@ public class Book {
         return createdAt;
     }
 
-    // verifica campos strings sao nulos ou vazios
-    private boolean isNull(String string) {
-        return string == null || string.trim().isEmpty();
-    }
-
-    private boolean validateIsbn(String isbn) {
+    private boolean isIsbnValid(String isbn) {
         Pattern pattern = Pattern.compile("978-\\d{2}-\\d{5}-\\d{2}-\\d", Pattern.CASE_INSENSITIVE);
 
         Matcher matcher = pattern.matcher(isbn);
