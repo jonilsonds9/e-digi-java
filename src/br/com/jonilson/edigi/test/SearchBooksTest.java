@@ -49,7 +49,7 @@ public class SearchBooksTest {
             bookDao.add(book1);
             bookDao.add(book2);
 
-            List<Book> result = bookDao.searchBooks("webteste");
+            List<Book> result = bookDao.searchBooks("Aplicações com PHP");
             System.out.println(result);
         } catch (Exception e) {
             System.out.println(e.getMessage());

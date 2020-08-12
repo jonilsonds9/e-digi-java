@@ -116,6 +116,10 @@ public class Book {
         return matcher.matches();
     }
 
+    public String infoBookToString() {
+        return "Autor: " + this.author.getName() + "\nLivro: " + this.title + "\nCadastrado em: " + this.createdAt + "\n";
+    }
+
     @Override
     public String toString() {
         return "Book{" +

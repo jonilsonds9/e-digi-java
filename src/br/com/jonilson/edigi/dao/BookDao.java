@@ -3,6 +3,7 @@ package br.com.jonilson.edigi.dao;
 import br.com.jonilson.edigi.model.Book;
 
 import java.util.*;
+import java.util.stream.Collectors;
 
 public class BookDao {
     private Set<Book> books;
@@ -17,7 +18,7 @@ public class BookDao {
         }
 
         System.out.println("Livro cadastrado com sucesso! \nDados do Livro:");
-        System.out.println("Autor: " + book.getAuthor().getName() + "\nLivro: " + book.getTitle() + "\nCadastrado em: " + book.getCreatedAt() + "\n");
+        System.out.println(book.infoBookToString());
     }
 
     public Set<Book> list() {
@@ -29,19 +30,12 @@ public class BookDao {
             throw new IllegalArgumentException("O título precisa conter pelo menos 2 caracteres!");
         }
 
-        List<Book> foundBooks = new ArrayList<>();
-
-         this.books.forEach(e -> {
-             if (e.getTitle().contains(title)) {
-                 foundBooks.add(e);
-             }
-        });
+        List<Book> foundBooks = this.books.stream()
+                .filter(e -> e.getTitle().contains(title)).collect(Collectors.toList());
 
          if (foundBooks.size() == 0) {
              throw new IllegalArgumentException("Nenhum livro encontrado!");
          }
-
-        System.out.println("Deu certo!");
 
         return foundBooks;
     }
