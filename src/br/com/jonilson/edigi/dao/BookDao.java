@@ -33,9 +33,11 @@ public class BookDao {
         List<Book> foundBooks = this.books.stream()
                 .filter(e -> e.getTitle().contains(title)).collect(Collectors.toList());
 
-         if (foundBooks.size() == 0) {
-             throw new IllegalArgumentException("Nenhum livro encontrado!");
-         }
+        if (foundBooks.size() == 0) {
+            throw new IllegalArgumentException("Nenhum livro encontrado!");
+        }
+
+        System.out.println(foundBooks);
 
         return foundBooks;
     }
