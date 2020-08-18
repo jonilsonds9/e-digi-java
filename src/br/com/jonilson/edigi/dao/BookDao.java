@@ -37,8 +37,6 @@ public class BookDao {
             throw new IllegalArgumentException("Nenhum livro encontrado!");
         }
 
-        System.out.println(foundBooks);
-
         return foundBooks;
     }
 }

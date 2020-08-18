@@ -54,7 +54,8 @@ public class SearchBooksTest {
             bookDao.add(book1);
             bookDao.add(book2);
 
-            bookDao.searchBooks("Apli");
+            List<Book> result = bookDao.searchBooks("Apli");
+            System.out.println(result);
         } catch (Exception e) {
             System.out.println(e.getMessage());
         }
