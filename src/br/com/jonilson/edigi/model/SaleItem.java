@@ -6,12 +6,10 @@ public class SaleItem {
 
     private Book book;
     private int quantity;
-    private BigDecimal total;
 
     public SaleItem(Book book, int quantity) {
         this.setBook(book);
         this.setQuantity(quantity);
-        this.setTotal(quantity, book.getPrice());
     }
 
     public void setBook(Book book) {
@@ -29,20 +27,16 @@ public class SaleItem {
         this.quantity = quantity;
     }
 
-    public void setTotal(int quantity, double price) {
-        this.total = new BigDecimal(Integer.toString(quantity)).multiply(new BigDecimal(Double.toString(price)));
-    }
-
     public BigDecimal getTotal() {
-        return this.total;
+        return new BigDecimal(Integer.toString(this.quantity)).multiply(new BigDecimal(Double.toString(this.book.getPrice())));
     }
 
     @Override
     public String toString() {
         return "SaleItem { " +
                 "\nbook { " + this.book.infoBookToString() +
-                "}, \nquantity= " + quantity +
-                ", \ntotal= " + total +
+                "}, \nquantityItem= " + this.quantity +
+                ", \ntotalItem= " + this.getTotal() +
                 "\n}";
     }
 }

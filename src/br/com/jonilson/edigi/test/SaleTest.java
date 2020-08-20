@@ -87,7 +87,7 @@ public class SaleTest {
             SaleItem item2 = new SaleItem(book2, 1);
 
             Sale sale = new Sale(item1);
-            sale.setItem(item2);
+            sale.addItem(item2);
 
             saleDao.add(sale);
         } catch (Exception e) {
@@ -97,7 +97,7 @@ public class SaleTest {
 
     public static void itShouldNotCreateSaleItemWithNullBook() {
         try {
-            SaleItem item = new SaleItem(null, 3);
+            new SaleItem(null, 3);
 
         } catch (Exception e) {
             System.out.println(e.getMessage());
@@ -123,8 +123,7 @@ public class SaleTest {
                     29.90
             );
 
-            SaleItem item = new SaleItem(book, 0);
-
+            new SaleItem(book, 0);
         } catch (Exception e) {
             System.out.println(e.getMessage());
         }
@@ -141,8 +140,6 @@ public class SaleTest {
 
     public static void itShouldNotAddSaleItemNull() {
         try {
-            SaleDao saleDao = new SaleDao();
-
             Author author = new Author("ana", "ana@gmail.com");
             Category category = new Category("Programação");
             Book book = new Book(
@@ -163,7 +160,7 @@ public class SaleTest {
             SaleItem item = new SaleItem(book, 3);
 
             Sale sale = new Sale(item);
-            sale.setItem(null);
+            sale.addItem(null);
         } catch (Exception e) {
             System.out.println(e.getMessage());
         }

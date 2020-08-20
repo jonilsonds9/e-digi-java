@@ -11,25 +11,25 @@ public class Sale {
     private LocalDateTime createdAt;
 
     public Sale(SaleItem item) {
-        this.setItem(item);
+        this.addItem(item);
         this.createdAt = LocalDateTime.now();
     }
 
-    public void setItem(SaleItem item) {
+    public void addItem(SaleItem item) {
         if (item == null) {
             throw new IllegalArgumentException("Item da venda não informado corretamente!");
         }
         this.items.add(item);
-        this.setTotal(item.getTotal());
+        this.updateTotal();
     }
 
-    public void setTotal(BigDecimal total) {
-        this.total = this.total.add(total);
+    public void updateTotal() {
+        this.total = this.items.stream().map(SaleItem::getTotal).reduce(BigDecimal.ZERO, BigDecimal::add);
     }
 
     public String infoSaleToString() {
         return "Sale { \n" +
                 "items= " + this.items + ", \n" +
-                "total= " + total + "\n}";
+                "total= " + this.total + "\n}";
     }
 }
