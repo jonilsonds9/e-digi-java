@@ -7,7 +7,6 @@ import java.util.List;
 
 public class Sale {
     private List<SaleItem> items = new ArrayList<>();
-    private BigDecimal total = new BigDecimal("0.0");
     private LocalDateTime createdAt;
 
     public Sale(SaleItem item) {
@@ -20,16 +19,15 @@ public class Sale {
             throw new IllegalArgumentException("Item da venda não informado corretamente!");
         }
         this.items.add(item);
-        this.updateTotal();
     }
 
-    public void updateTotal() {
-        this.total = this.items.stream().map(SaleItem::getTotal).reduce(BigDecimal.ZERO, BigDecimal::add);
+    public BigDecimal getTotal() {
+        return this.items.stream().map(SaleItem::getTotal).reduce(BigDecimal.ZERO, BigDecimal::add);
     }
 
     public String infoSaleToString() {
         return "Sale { \n" +
                 "items= " + this.items + ", \n" +
-                "total= " + this.total + "\n}";
+                "total= " + this.getTotal() + "\n}";
     }
 }
