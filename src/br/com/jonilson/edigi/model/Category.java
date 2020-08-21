@@ -14,7 +14,7 @@ public class Category {
     }
 
     public String getName() {
-        return name;
+        return this.name;
     }
 
     private void setName(String name) {
@@ -27,8 +27,8 @@ public class Category {
     @Override
     public String toString() {
         return "Category{" +
-                "name='" + name + '\'' +
-                ", createdAt=" + createdAt +
+                "name='" + this.name + '\'' +
+                ", createdAt=" + this.createdAt +
                 '}';
     }
 
@@ -42,6 +42,6 @@ public class Category {
 
     @Override
     public int hashCode() {
-        return Objects.hash(name);
+        return Objects.hash(this.name);
     }
 }

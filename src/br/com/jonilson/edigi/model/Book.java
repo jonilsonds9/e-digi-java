@@ -34,7 +34,7 @@ public class Book {
     }
 
     public String getTitle() {
-        return title;
+        return this.title;
     }
 
     private void setTitle(String title) {
@@ -73,7 +73,7 @@ public class Book {
     }
 
     public Author getAuthor() {
-        return author;
+        return this.author;
     }
 
     private void setAuthor(Author author) {
@@ -104,8 +104,12 @@ public class Book {
         this.price = price;
     }
 
+    public double getPrice() {
+        return this.price;
+    }
+
     public LocalDateTime getCreatedAt() {
-        return createdAt;
+        return this.createdAt;
     }
 
     private boolean isIsbnValid(String isbn) {
@@ -123,15 +127,15 @@ public class Book {
     @Override
     public String toString() {
         return "Book{" +
-                "title='" + title + '\'' +
-                ", \nresume='" + resume + '\'' +
-                ", \nsummary='" + summary + '\'' +
-                ", \nnumberPages=" + numberPages +
-                ", \nisbn='" + isbn + '\'' +
-                ", \nauthor=" + author +
-                ", \ncategory=" + category +
-                ", \nedition=" + edition +
-                ", \nprice=" + price +
+                "title='" + this.title + '\'' +
+                ", \nresume='" + this.resume + '\'' +
+                ", \nsummary='" + this.summary + '\'' +
+                ", \nnumberPages=" + this.numberPages +
+                ", \nisbn='" + this.isbn + '\'' +
+                ", \nauthor=" + this.author +
+                ", \ncategory=" + this.category +
+                ", \nedition=" + this.edition +
+                ", \nprice=" + this.price +
                 '}';
     }
 
@@ -146,6 +150,6 @@ public class Book {
 
     @Override
     public int hashCode() {
-        return Objects.hash(title, isbn);
+        return Objects.hash(this.title, this.isbn);
     }
 }

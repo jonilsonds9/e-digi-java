@@ -17,7 +17,7 @@ public class Author {
     }
 
     public String getName() {
-        return name;
+        return this.name;
     }
 
     private void setName(String name) {
@@ -28,7 +28,7 @@ public class Author {
     }
 
     public String getEmail() {
-        return email;
+        return this.email;
     }
 
     private void setEmail(String email) {
@@ -50,9 +50,9 @@ public class Author {
     @Override
     public String toString() {
         return "\nAuthor{" +
-                "name='" + name + '\'' +
-                ", email='" + email + '\'' +
-                ", created_at=" + createdAt +
+                "name='" + this.name + '\'' +
+                ", email='" + this.email + '\'' +
+                ", created_at=" + this.createdAt +
                 '}';
     }
 
@@ -66,6 +66,6 @@ public class Author {
 
     @Override
     public int hashCode() {
-        return Objects.hash(email);
+        return Objects.hash(this.email);
     }
 }
