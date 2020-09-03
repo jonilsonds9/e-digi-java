@@ -6,8 +6,7 @@ import br.com.jonilson.edigi.model.Book;
 import br.com.jonilson.edigi.model.Category;
 import org.junit.jupiter.api.Test;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.*;
 
 public class BookTest {
 
@@ -35,11 +34,7 @@ public class BookTest {
 
         bookDao.add(book);
 
-        assertEquals(1, bookDao.list().size());
-        assertEquals(book.getTitle(), bookDao.list().iterator().next().getTitle());
-        assertEquals(book.getCreatedAt(), bookDao.list().iterator().next().getCreatedAt());
-        assertEquals(book.getPrice(), bookDao.list().iterator().next().getPrice());
-        assertEquals(book.getAuthor(), bookDao.list().iterator().next().getAuthor());
+        assertTrue(bookDao.list().contains(book));
     }
 
     @Test

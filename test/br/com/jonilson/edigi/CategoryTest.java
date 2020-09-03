@@ -4,8 +4,7 @@ import br.com.jonilson.edigi.dao.CategoryDao;
 import br.com.jonilson.edigi.model.Category;
 import org.junit.jupiter.api.Test;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.*;
 
 public class CategoryTest {
 
@@ -17,8 +16,7 @@ public class CategoryTest {
 
         categoryDao.add(category);
 
-        assertEquals(1, categoryDao.list().size());
-        assertEquals(category.getName(), categoryDao.list().iterator().next().getName());
+        assertTrue(categoryDao.list().contains(category));
     }
 
     @Test

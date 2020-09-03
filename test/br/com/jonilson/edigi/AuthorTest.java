@@ -4,8 +4,7 @@ import br.com.jonilson.edigi.dao.AuthorDao;
 import br.com.jonilson.edigi.model.Author;
 import org.junit.jupiter.api.Test;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.*;
 
 public class AuthorTest {
 
@@ -17,36 +16,26 @@ public class AuthorTest {
 
         authorDao.add(author);
 
-        assertEquals(1, authorDao.list().size());
-        assertEquals(author.getName(), authorDao.list().iterator().next().getName());
-        assertEquals(author.getEmail(), authorDao.list().iterator().next().getEmail());
+        assertTrue(authorDao.list().contains(author));
     }
 
     @Test
-    public void shouldNotRegisterAuthorWithoutName () {
-        Exception exception = assertThrows(IllegalArgumentException.class, () ->
-            new Author(null, "ana@gmail.com")
+    public void shouldNotRegisterAuthorInvalid () {
+        Exception exceptionWithoutName = assertThrows(IllegalArgumentException.class, () ->
+                new Author(null, "ana@gmail.com")
         );
 
-        assertEquals("O nome é obrigatório!", exception.getMessage());
-    }
-
-    @Test
-    public void shouldNotRegisterAuthorWithoutEmail() {
-        Exception exception = assertThrows(IllegalArgumentException.class, () ->
-            new Author("ana", null)
+        Exception exceptionWithoutEmail = assertThrows(IllegalArgumentException.class, () ->
+                new Author("ana", null)
         );
 
-        assertEquals("Email informado para o autor é inválido!", exception.getMessage());
-    }
-
-    @Test
-    public void shouldNotRegisterAuthorWithEmailInvalid() {
-        Exception exception = assertThrows(IllegalArgumentException.class, () ->
-            new Author("ana", null)
+        Exception exceptionWithEmailInvalid = assertThrows(IllegalArgumentException.class, () ->
+                new Author("ana", null)
         );
 
-        assertEquals("Email informado para o autor é inválido!", exception.getMessage());
+        assertEquals("O nome é obrigatório!", exceptionWithoutName.getMessage());
+        assertEquals("Email informado para o autor é inválido!", exceptionWithoutEmail.getMessage());
+        assertEquals("Email informado para o autor é inválido!", exceptionWithEmailInvalid.getMessage());
     }
 
     @Test

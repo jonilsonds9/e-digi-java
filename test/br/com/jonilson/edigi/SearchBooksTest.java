@@ -53,14 +53,11 @@ public class SearchBooksTest {
         bookDao.add(book1);
         bookDao.add(book2);
 
-        List<Book> expected = new ArrayList<>();
-        expected.add(book1);
-        expected.add(book2);
-
         List<Book> result = bookDao.searchBooks("Apli");
 
         assertEquals(2, result.size());
-        assertEquals(expected, result);
+        assertTrue(result.contains(book1));
+        assertTrue(result.contains(book2));
     }
 
     @Test

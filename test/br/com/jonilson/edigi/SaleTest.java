@@ -8,8 +8,7 @@ import org.junit.jupiter.api.Test;
 
 import java.util.Set;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.*;
 
 public class SaleTest {
 
@@ -40,12 +39,7 @@ public class SaleTest {
 
         saleDao.add(sale);
 
-        System.out.println("Resultado do teste:");
-        System.out.println(sale.getItems().get(0) + " -------- " + saleDao.list().iterator().next().getItems().get(0));
-
-        assertEquals(1, saleDao.list().size());
-        assertEquals(sale.getTotal(), saleDao.list().iterator().next().getTotal());
-        assertEquals(item, saleDao.list().iterator().next().getItems().get(0));
+        assertTrue(saleDao.list().contains(sale));
     }
 
     @Test
@@ -93,10 +87,7 @@ public class SaleTest {
 
         saleDao.add(sale);
 
-        assertEquals(1, saleDao.list().size());
-        assertEquals(sale.getTotal(), saleDao.list().iterator().next().getTotal());
-        assertEquals(item1, saleDao.list().iterator().next().getItems().get(0));
-        assertEquals(item2, saleDao.list().iterator().next().getItems().get(1));
+        assertTrue(saleDao.list().contains(sale));
     }
 
     @Test
