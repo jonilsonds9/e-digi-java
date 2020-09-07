@@ -21,6 +21,10 @@ public class Sale {
         this.items.add(item);
     }
 
+    public List<SaleItem> getItems() {
+        return this.items;
+    }
+
     public BigDecimal getTotal() {
         return this.items.stream().map(SaleItem::getTotal).reduce(BigDecimal.ZERO, BigDecimal::add);
     }
