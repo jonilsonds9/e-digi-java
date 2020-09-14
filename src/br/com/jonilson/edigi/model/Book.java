@@ -7,6 +7,7 @@ import java.util.regex.Pattern;
 
 public class Book {
 
+    private Integer id;
     private String title;
     private String resume;
     private String summary;
@@ -33,6 +34,14 @@ public class Book {
         this.createdAt = LocalDateTime.now();
     }
 
+    public Integer getId() {
+        return id;
+    }
+
+    public void setId(Integer id) {
+        this.id = id;
+    }
+
     public String getTitle() {
         return this.title;
     }
@@ -44,11 +53,19 @@ public class Book {
         this.title = title;
     }
 
+    public String getResume() {
+        return resume;
+    }
+
     private void setResume(String resume) {
         if (resume == null || resume.trim().isEmpty() || resume.length() < 500) {
             throw new IllegalArgumentException("O resumo é obrigatório e precisa ter pelo menos 500 caracteres!");
         }
         this.resume = resume;
+    }
+
+    public String getSummary() {
+        return summary;
     }
 
     private void setSummary(String summary) {
@@ -58,11 +75,19 @@ public class Book {
         this.summary = summary;
     }
 
+    public int getNumberPages() {
+        return numberPages;
+    }
+
     private void setNumberPages(int numberPages) {
         if (numberPages <= 0) {
             throw new IllegalArgumentException("O número de página precisa ser maior que zero!");
         }
         this.numberPages = numberPages;
+    }
+
+    public String getIsbn() {
+        return isbn;
     }
 
     private void setIsbn(String isbn) {
@@ -83,11 +108,19 @@ public class Book {
         this.author = author;
     }
 
+    public Category getCategory() {
+        return category;
+    }
+
     private void setCategory(Category category) {
         if (category == null) {
             throw new IllegalArgumentException("Categoria não informada corretamente!");
         }
         this.category = category;
+    }
+
+    public int getEdition() {
+        return edition;
     }
 
     private void setEdition(int edition) {
@@ -112,6 +145,10 @@ public class Book {
         return this.createdAt;
     }
 
+    public void setCreatedAt(LocalDateTime createdAt) {
+        this.createdAt = createdAt;
+    }
+
     private boolean isIsbnValid(String isbn) {
         Pattern pattern = Pattern.compile("978-\\d{2}-\\d{5}-\\d{2}-\\d", Pattern.CASE_INSENSITIVE);
 
@@ -124,18 +161,36 @@ public class Book {
         return "Autor: " + this.author.getName() + "\nLivro: " + this.title + "\nCadastrado em: " + this.createdAt + "\n";
     }
 
+//    @Override
+//    public String toString() {
+//        return "Book{" +
+//                "title='" + this.title + '\'' +
+//                ", \nresume='" + this.resume + '\'' +
+//                ", \nsummary='" + this.summary + '\'' +
+//                ", \nnumberPages=" + this.numberPages +
+//                ", \nisbn='" + this.isbn + '\'' +
+//                ", \nauthor=" + this.author +
+//                ", \ncategory=" + this.category +
+//                ", \nedition=" + this.edition +
+//                ", \nprice=" + this.price +
+//                '}';
+//    }
+
+
     @Override
     public String toString() {
         return "Book{" +
-                "title='" + this.title + '\'' +
-                ", \nresume='" + this.resume + '\'' +
-                ", \nsummary='" + this.summary + '\'' +
-                ", \nnumberPages=" + this.numberPages +
-                ", \nisbn='" + this.isbn + '\'' +
-                ", \nauthor=" + this.author +
-                ", \ncategory=" + this.category +
-                ", \nedition=" + this.edition +
-                ", \nprice=" + this.price +
+                "id=" + id +
+                ", title='" + title + '\'' +
+                ", resume='" + resume + '\'' +
+                ", summary='" + summary + '\'' +
+                ", numberPages=" + numberPages +
+                ", isbn='" + isbn + '\'' +
+                ", author=" + author +
+                ", category=" + category +
+                ", edition=" + edition +
+                ", price=" + price +
+                ", createdAt=" + createdAt +
                 '}';
     }
 

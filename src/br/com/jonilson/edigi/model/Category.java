@@ -4,13 +4,21 @@ import java.time.LocalDateTime;
 import java.util.Objects;
 
 public class Category {
-
+    private Integer id;
     private String name;
     private LocalDateTime createdAt;
 
     public Category(String name) {
         this.setName(name);
         this.createdAt = LocalDateTime.now();
+    }
+
+    public Integer getId() {
+        return id;
+    }
+
+    public void setId(Integer id) {
+        this.id = id;
     }
 
     public String getName() {
@@ -24,11 +32,28 @@ public class Category {
         this.name = name;
     }
 
+    public LocalDateTime getCreatedAt() {
+        return createdAt;
+    }
+
+    public void setCreatedAt(LocalDateTime createdAt) {
+        this.createdAt = createdAt;
+    }
+
+//    @Override
+//    public String toString() {
+//        return "Category{" +
+//                "name='" + this.name + '\'' +
+//                ", createdAt=" + this.createdAt +
+//                '}';
+//    }
+
     @Override
     public String toString() {
         return "Category{" +
-                "name='" + this.name + '\'' +
-                ", createdAt=" + this.createdAt +
+                "id=" + id +
+                ", name='" + name + '\'' +
+                ", createdAt=" + createdAt +
                 '}';
     }
 

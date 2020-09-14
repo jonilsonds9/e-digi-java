@@ -1,16 +1,42 @@
-package br.com.jonilson.edigi;
+package br.com.jonilson.edigi.integration;
 
 import br.com.jonilson.edigi.dao.AuthorDao;
+import br.com.jonilson.edigi.factory.ConnectionFactory;
 import br.com.jonilson.edigi.model.Author;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.SQLException;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-public class AuthorTest {
+public class AuthorIntegrationTest {
+
+    public Connection connection;
+
+    @BeforeEach
+    public void getConnection() {
+        this.connection = ConnectionFactory.getConnection();
+    }
+
+    @AfterEach
+    public void closeConnection() {
+        String deleteAll = "DELETE FROM authors";
+        try (PreparedStatement statement = this.connection.prepareStatement(deleteAll)) {
+            statement.execute();
+        } catch (SQLException e) {
+            throw new IllegalArgumentException(e);
+        }
+
+        ConnectionFactory.closeConnection(this.connection);
+    }
 
     @Test
     public void shouldRegisterAuthor() {
-        AuthorDao authorDao = new AuthorDao();
+        AuthorDao authorDao = new AuthorDao(this.connection);
 
         Author author = new Author("ana", "ana@gmail.com");
 
@@ -40,7 +66,7 @@ public class AuthorTest {
 
     @Test
     public void shouldNotRegisterAuthorAlreadyRegistered() {
-        AuthorDao authorDao = new AuthorDao();
+        AuthorDao authorDao = new AuthorDao(this.connection);
 
         Author author1 = new Author("ana", "ana@gmail.com");
         authorDao.add(author1);

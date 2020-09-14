@@ -1,18 +1,25 @@
-package br.com.jonilson.edigi;
+package br.com.jonilson.edigi.unit;
 
 import br.com.jonilson.edigi.dao.BookDao;
 import br.com.jonilson.edigi.model.Author;
 import br.com.jonilson.edigi.model.Book;
 import br.com.jonilson.edigi.model.Category;
 import org.junit.jupiter.api.Test;
+import org.mockito.Mockito;
+import org.mockito.invocation.InvocationOnMock;
+import org.mockito.stubbing.Answer;
+
+import java.util.Arrays;
+import java.util.HashSet;
 
 import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.ArgumentMatchers.isA;
 
-public class BookTest {
+public class BookUnitTest {
 
     @Test
     public void shouldRegisterBook() {
-        BookDao bookDao = new BookDao();
+        BookDao bookDao = Mockito.mock(BookDao.class);
 
         Author author = new Author("ana", "ana@gmail.com");
         Category category = new Category("Programação");
@@ -31,6 +38,8 @@ public class BookTest {
                 1,
                 29.90
         );
+
+        Mockito.when(bookDao.list()).thenReturn(new HashSet<>(Arrays.asList(book)));
 
         bookDao.add(book);
 
@@ -259,7 +268,20 @@ public class BookTest {
 
     @Test
     public void shouldNotRegisterBookWithTitleAlreadyRegistered() {
-        BookDao bookDao = new BookDao();
+        BookDao bookDao = Mockito.mock(BookDao.class);
+
+        Mockito.doAnswer(new Answer() {
+            private Book bookReceived = null;
+
+            public Object answer(InvocationOnMock invocationOnMock) {
+                if (bookReceived == null) {
+                    bookReceived = (Book) invocationOnMock.getArguments()[0];
+                } else if (bookReceived.equals(invocationOnMock.getArguments()[0])) {
+                    throw new IllegalArgumentException("Esse livro já está cadastrado!");
+                }
+                return null;
+            }
+        }).when(bookDao).add(isA(Book.class));
 
         Author author = new Author("ana", "ana@gmail.com");
         Category category = new Category("Programação");
@@ -304,7 +326,20 @@ public class BookTest {
 
     @Test
     public void shouldNotRegisterBookWithIsbnAlreadyRegistered() {
-        BookDao bookDao = new BookDao();
+        BookDao bookDao = Mockito.mock(BookDao.class);
+
+        Mockito.doAnswer(new Answer() {
+            private Book bookReceived = null;
+
+            public Object answer(InvocationOnMock invocationOnMock) {
+                if (bookReceived == null) {
+                    bookReceived = (Book) invocationOnMock.getArguments()[0];
+                } else if (bookReceived.equals(invocationOnMock.getArguments()[0])) {
+                    throw new IllegalArgumentException("Esse livro já está cadastrado!");
+                }
+                return null;
+            }
+        }).when(bookDao).add(isA(Book.class));
 
         Author author = new Author("ana", "ana@gmail.com");
         Category category = new Category("Programação");
