@@ -6,7 +6,7 @@ import java.sql.SQLException;
 
 public class ConnectionFactory {
 
-    public static Connection getConnection() {
+    public Connection getConnection() {
         Connection connection = null;
 
         try {
@@ -20,7 +20,7 @@ public class ConnectionFactory {
         return connection;
     }
 
-    public static void closeConnection(Connection connection) {
+    public void closeConnection(Connection connection) {
         try {
             if (null != connection) {
                 connection.close();

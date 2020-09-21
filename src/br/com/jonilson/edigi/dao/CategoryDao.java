@@ -1,5 +1,6 @@
 package br.com.jonilson.edigi.dao;
 
+import br.com.jonilson.edigi.model.Author;
 import br.com.jonilson.edigi.model.Category;
 
 import java.sql.*;
@@ -20,24 +21,27 @@ public class CategoryDao {
             throw new IllegalArgumentException("Essa categoria já está cadastrado!");
         }
 
-        String insert = "INSERT INTO categories (name, created_at) VALUES (?,?)";
+        String insert = "INSERT INTO categories (name) VALUES (?)";
 
         try (PreparedStatement statement = this.connection.prepareStatement(insert, Statement.RETURN_GENERATED_KEYS)) {
             statement.setString(1, category.getName());
-            statement.setObject(2, category.getCreatedAt());
 
             if (statement.executeUpdate() > 0) {
-
                 ResultSet rst = statement.getGeneratedKeys();
+
                 if (rst.next()) {
                     category.setId(rst.getInt(1));
-                }
 
-                System.out.println("Categoria cadastrada com sucesso! \nDados da Categoria:");
-                System.out.println("Nome: " + category.getName() + "\n");
+                    Set<Category> categories = this.list();
+                    category.setCreatedAt(categories.stream()
+                            .filter(c -> c.getId() == category.getId()).findFirst().get().getCreatedAt());
+
+                    System.out.println("Categoria cadastrada com sucesso! \nDados da Categoria:");
+                    System.out.println("Nome: " + category.getName() + "\n");
+                }
             }
         } catch (SQLException e) {
-            throw new IllegalArgumentException(e);
+            throw new RuntimeException(e);
         }
     }
 
@@ -51,15 +55,16 @@ public class CategoryDao {
 
             try (ResultSet rst = statement.getResultSet()) {
                 while (rst.next()) {
-                    Category category = new Category(rst.getString(2));
-                    category.setId(rst.getInt(1));
-                    category.setCreatedAt(rst.getTimestamp(3).toLocalDateTime());
+                    Category category = new Category(
+                            rst.getInt(1),
+                            rst.getString(2),
+                            rst.getTimestamp(3).toLocalDateTime());
 
                     categories.add(category);
                 }
             }
         } catch (SQLException e) {
-            throw new IllegalArgumentException(e);
+            throw new RuntimeException(e);
         }
 
         return Collections.unmodifiableSet(categories);

@@ -13,6 +13,12 @@ public class Category {
         this.createdAt = LocalDateTime.now();
     }
 
+    public Category(Integer id, String name, LocalDateTime createdAt) {
+        this.setId(id);
+        this.setName(name);
+        this.setCreatedAt(createdAt);
+    }
+
     public Integer getId() {
         return id;
     }
@@ -40,20 +46,11 @@ public class Category {
         this.createdAt = createdAt;
     }
 
-//    @Override
-//    public String toString() {
-//        return "Category{" +
-//                "name='" + this.name + '\'' +
-//                ", createdAt=" + this.createdAt +
-//                '}';
-//    }
-
     @Override
     public String toString() {
         return "Category{" +
-                "id=" + id +
-                ", name='" + name + '\'' +
-                ", createdAt=" + createdAt +
+                "name='" + this.name + '\'' +
+                ", createdAt=" + this.createdAt +
                 '}';
     }
 

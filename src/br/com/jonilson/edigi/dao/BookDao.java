@@ -28,7 +28,7 @@ public class BookDao {
             throw new IllegalArgumentException("Esse livro já está cadastrado!");
         }
 
-        String insert = "INSERT INTO books (title, resume, summary, number_pages, isbn, author_id, category_id, edition, price, created_at) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+        String insert = "INSERT INTO books (title, resume, summary, number_pages, isbn, author_id, category_id, edition, price) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)";
 
         try (PreparedStatement statement = this.connection.prepareStatement(insert, Statement.RETURN_GENERATED_KEYS)) {
             statement.setString(1, book.getTitle());
@@ -40,20 +40,23 @@ public class BookDao {
             statement.setInt(7, book.getCategory().getId());
             statement.setInt(8, book.getEdition());
             statement.setDouble(9, book.getPrice());
-            statement.setObject(10, book.getCreatedAt());
 
             if (statement.executeUpdate() > 0) {
-
                 ResultSet rst = statement.getGeneratedKeys();
+
                 if (rst.next()) {
                     book.setId(rst.getInt(1));
-                }
 
-                System.out.println("Livro cadastrado com sucesso! \nDados do Livro:");
-                System.out.println(book.infoBookToString());
+                    Set<Book> books = this.list();
+                    book.setCreatedAt(books.stream()
+                            .filter(b -> b.getId() == book.getId()).findFirst().get().getCreatedAt());
+
+                    System.out.println("Livro cadastrado com sucesso! \nDados do Livro:");
+                    System.out.println(book.infoBookToString());
+                }
             }
         } catch (SQLException e) {
-            throw new IllegalArgumentException(e);
+            throw new RuntimeException(e);
         }
     }
 
@@ -77,6 +80,7 @@ public class BookDao {
                     Category category = categories.stream().filter(c -> c.getId() == categoryId).findFirst().get();
 
                     Book book = new Book(
+                            rst.getInt("id"),
                             rst.getString("title"),
                             rst.getString("resume"),
                             rst.getString("summary"),
@@ -85,16 +89,15 @@ public class BookDao {
                             author,
                             category,
                             rst.getInt("edition"),
-                            rst.getDouble("price")
+                            rst.getDouble("price"),
+                            rst.getTimestamp("created_at").toLocalDateTime()
                     );
-                    book.setId(rst.getInt("id"));
-                    book.setCreatedAt(rst.getTimestamp("created_at").toLocalDateTime());
 
                     books.add(book);
                 }
             }
         } catch (SQLException e) {
-            throw new IllegalArgumentException(e);
+            throw new RuntimeException(e);
         }
 
         return Collections.unmodifiableSet(books);

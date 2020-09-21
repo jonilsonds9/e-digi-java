@@ -16,6 +16,12 @@ public class Sale {
         this.createdAt = LocalDateTime.now();
     }
 
+    public Sale(Integer id, SaleItem item, LocalDateTime createdAt) {
+        this.id = id;
+        this.addItem(item);
+        this.createdAt = createdAt;
+    }
+
     public Integer getId() {
         return id;
     }
@@ -58,12 +64,12 @@ public class Sale {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         Sale sale = (Sale) o;
-        return items.equals(sale.items) &&
-                createdAt.equals(sale.createdAt);
+        return id.equals(sale.id) &&
+                items.equals(sale.items);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(items, createdAt);
+        return Objects.hash(id, items);
     }
 }

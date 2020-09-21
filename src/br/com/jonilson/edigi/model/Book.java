@@ -34,6 +34,22 @@ public class Book {
         this.createdAt = LocalDateTime.now();
     }
 
+    public Book(Integer id, String title, String resume, String summary, int numberPages,
+                String isbn, Author author, Category category, int edition, double price,
+                LocalDateTime createdAt) {
+        this.setId(id);
+        this.setTitle(title);
+        this.setResume(resume);
+        this.setSummary(summary);
+        this.setNumberPages(numberPages);
+        this.setIsbn(isbn);
+        this.setAuthor(author);
+        this.setCategory(category);
+        this.setEdition(edition);
+        this.setPrice(price);
+        this.setCreatedAt(createdAt);
+    }
+
     public Integer getId() {
         return id;
     }
@@ -130,15 +146,15 @@ public class Book {
         this.edition = edition;
     }
 
+    public double getPrice() {
+        return this.price;
+    }
+
     private void setPrice(double price) {
         if (price < 0) {
             throw new IllegalArgumentException("O preço deve ser um número positivo!");
         }
         this.price = price;
-    }
-
-    public double getPrice() {
-        return this.price;
     }
 
     public LocalDateTime getCreatedAt() {
@@ -159,39 +175,6 @@ public class Book {
 
     public String infoBookToString() {
         return "Autor: " + this.author.getName() + "\nLivro: " + this.title + "\nCadastrado em: " + this.createdAt + "\n";
-    }
-
-//    @Override
-//    public String toString() {
-//        return "Book{" +
-//                "title='" + this.title + '\'' +
-//                ", \nresume='" + this.resume + '\'' +
-//                ", \nsummary='" + this.summary + '\'' +
-//                ", \nnumberPages=" + this.numberPages +
-//                ", \nisbn='" + this.isbn + '\'' +
-//                ", \nauthor=" + this.author +
-//                ", \ncategory=" + this.category +
-//                ", \nedition=" + this.edition +
-//                ", \nprice=" + this.price +
-//                '}';
-//    }
-
-
-    @Override
-    public String toString() {
-        return "Book{" +
-                "id=" + id +
-                ", title='" + title + '\'' +
-                ", resume='" + resume + '\'' +
-                ", summary='" + summary + '\'' +
-                ", numberPages=" + numberPages +
-                ", isbn='" + isbn + '\'' +
-                ", author=" + author +
-                ", category=" + category +
-                ", edition=" + edition +
-                ", price=" + price +
-                ", createdAt=" + createdAt +
-                '}';
     }
 
     @Override

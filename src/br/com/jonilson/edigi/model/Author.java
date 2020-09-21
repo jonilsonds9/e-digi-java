@@ -17,6 +17,13 @@ public class Author {
         this.createdAt = LocalDateTime.now();
     }
 
+    public Author(Integer id, String name, String email, LocalDateTime createdAt) {
+        this.setId(id);
+        this.setName(name);
+        this.setEmail(email);
+        this.setCreatedAt(createdAt);
+    }
+
     public Integer getId() {
         return id;
     }
@@ -64,23 +71,12 @@ public class Author {
         return matcher.matches();
     }
 
-//    @Override
-//    public String toString() {
-//        return "\nAuthor{" +
-//                "name='" + this.name + '\'' +
-//                ", email='" + this.email + '\'' +
-//                ", created_at=" + this.createdAt +
-//                '}';
-//    }
-
-
     @Override
     public String toString() {
-        return "Author{" +
-                "id=" + id +
-                ", name='" + name + '\'' +
-                ", email='" + email + '\'' +
-                ", createdAt=" + createdAt +
+        return "\nAuthor{" +
+                "name='" + this.name + '\'' +
+                ", email='" + this.email + '\'' +
+                ", created_at=" + this.createdAt +
                 '}';
     }
 

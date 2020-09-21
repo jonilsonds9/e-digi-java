@@ -15,11 +15,12 @@ import static org.junit.jupiter.api.Assertions.*;
 
 public class CategoryIntegrationTest {
 
+    public ConnectionFactory connectionFactory = new ConnectionFactory();
     public Connection connection;
 
     @BeforeEach
     public void getConnection() {
-        this.connection = ConnectionFactory.getConnection();
+        this.connection = this.connectionFactory.getConnection();
     }
 
     @AfterEach
@@ -31,7 +32,7 @@ public class CategoryIntegrationTest {
             throw new IllegalArgumentException(e);
         }
 
-        ConnectionFactory.closeConnection(this.connection);
+        this.connectionFactory.closeConnection(this.connection);
     }
 
     @Test

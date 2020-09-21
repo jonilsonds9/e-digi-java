@@ -3,6 +3,7 @@ package br.com.jonilson.edigi.dao;
 import br.com.jonilson.edigi.model.Sale;
 import br.com.jonilson.edigi.model.SaleItem;
 
+import javax.swing.plaf.synth.SynthOptionPaneUI;
 import java.sql.*;
 import java.util.Collections;
 import java.util.HashSet;
@@ -21,10 +22,9 @@ public class SaleDao {
     }
 
     public void add(Sale sale) {
-        String insert = "INSERT INTO sales (created_at) VALUES (?)";
+        String insert = "INSERT INTO sales VALUES ()";
 
         try (PreparedStatement statement = this.connection.prepareStatement(insert, Statement.RETURN_GENERATED_KEYS)) {
-            statement.setObject(1, sale.getCreatedAt());
 
             if (statement.executeUpdate() > 0) {
 
@@ -37,13 +37,16 @@ public class SaleDao {
 
                         this.saleItemDao.add(item);
                     }
-                }
 
-                System.out.println("Venda realizada com sucesso! \nDetalhes da venda:");
-                System.out.println(sale.infoSaleToString());
+                    Set<Sale> sales = this.list();
+                    sale.setCreatedAt(sales.stream().filter(s -> s.getId() == sale.getId()).findFirst().get().getCreatedAt());
+
+                    System.out.println("Venda realizada com sucesso! \nDetalhes da venda:");
+                    System.out.println(sale.infoSaleToString());
+                }
             }
         } catch (SQLException e) {
-            throw new IllegalArgumentException(e);
+            throw new RuntimeException(e);
         }
     }
 
@@ -65,9 +68,9 @@ public class SaleDao {
                             .filter(item -> item.getSaleId() == saleId)
                             .collect(Collectors.toList());
 
-                    Sale sale = new Sale(items.get(0));
-                    sale.setId(rst.getInt("id"));
-                    sale.setCreatedAt(rst.getTimestamp("created_at").toLocalDateTime());
+                    Sale sale = new Sale(rst.getInt("id"),
+                            items.get(0),
+                            rst.getTimestamp("created_at").toLocalDateTime());
 
                     for (SaleItem item : items) {
                         if (!sale.getItems().contains(item))
@@ -78,7 +81,7 @@ public class SaleDao {
                 }
             }
         } catch (SQLException e) {
-            throw new IllegalArgumentException(e);
+            throw new RuntimeException(e);
         }
 
         return Collections.unmodifiableSet(sales);

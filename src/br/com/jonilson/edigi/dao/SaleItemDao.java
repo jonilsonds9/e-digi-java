@@ -23,10 +23,6 @@ public class SaleItemDao {
         String insert = "INSERT INTO sales_items (quantity, total_item, book_id, sale_id) VALUES (?, ?, ?, ?)";
 
         try (PreparedStatement statement = this.connection.prepareStatement(insert, Statement.RETURN_GENERATED_KEYS)) {
-
-            System.out.println("Imprimindo Item:");
-            System.out.println(saleItem);
-
             statement.setInt(1, saleItem.getQuantity());
             statement.setBigDecimal(2, saleItem.getTotal());
             statement.setInt(3, saleItem.getBook().getId());
@@ -34,7 +30,7 @@ public class SaleItemDao {
 
             statement.execute();
         } catch (SQLException e) {
-            throw new IllegalArgumentException(e);
+            throw new RuntimeException(e);
         }
     }
 
@@ -60,7 +56,7 @@ public class SaleItemDao {
                 }
             }
         } catch (SQLException e) {
-            throw new IllegalArgumentException(e);
+            throw new RuntimeException(e);
         }
 
         return items;
