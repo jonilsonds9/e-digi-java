@@ -32,15 +32,7 @@ public class CategoryDao {
                 if (rst.next()) {
                     category.setId(rst.getInt(1));
 
-                    String query = "SELECT * FROM categories Where id = ?";
-                    try (PreparedStatement statementQuery = this.connection.prepareStatement(query)) {
-                        statementQuery.setInt(1, category.getId());
-                        ResultSet rs = statementQuery.executeQuery();
-
-                        while (rs.next()) {
-                            category.setCreatedAt(rs.getTimestamp("created_at").toLocalDateTime());
-                        }
-                    }
+                    category.setCreatedAt(this.findId(category.getId()).getCreatedAt());
 
                     System.out.println("Categoria cadastrada com sucesso! \nDados da Categoria:");
                     System.out.println("Nome: " + category.getName() + "\n");
@@ -74,5 +66,29 @@ public class CategoryDao {
         }
 
         return Collections.unmodifiableSet(categories);
+    }
+
+    public Category findId(Integer id) {
+        if (id == null || id <= 0) {
+            throw new IllegalArgumentException("Id não foi informado corretamente!");
+        }
+
+        String query = "SELECT * FROM categories Where id = ?";
+
+        try (PreparedStatement statementQuery = this.connection.prepareStatement(query)) {
+            statementQuery.setInt(1, id);
+            ResultSet rst = statementQuery.executeQuery();
+
+            if (rst.next()) {
+                return new Category(
+                        rst.getInt(1),
+                        rst.getString(2),
+                        rst.getTimestamp(3).toLocalDateTime());
+            }
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+
+        throw new RuntimeException("Erro ao buscar Categoria!");
     }
 }

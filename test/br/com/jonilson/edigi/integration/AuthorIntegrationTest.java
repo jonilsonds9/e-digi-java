@@ -79,4 +79,25 @@ public class AuthorIntegrationTest {
 
         assertEquals("Esse email já está cadastrado!", exception.getMessage());
     }
+
+    @Test
+    public void shouldThrowIllegalArgumentExceptionWithoutId() {
+        AuthorDao authorDao = new AuthorDao(this.connection);
+
+        Author author = new Author("ana", "ana@gmail.com");
+        authorDao.add(author);
+
+        Exception exception = assertThrows(IllegalArgumentException.class, () -> authorDao.findId(null));
+
+        assertEquals("Id não foi informado corretamente!", exception.getMessage());
+    }
+
+    @Test
+    public void shouldThrowRuntimeExceptionWithIdNonexistent() {
+        AuthorDao authorDao = new AuthorDao(this.connection);
+
+        Exception exception = assertThrows(RuntimeException.class, () -> authorDao.findId(1));
+
+        assertEquals("Erro ao buscar Autor!", exception.getMessage());
+    }
 }

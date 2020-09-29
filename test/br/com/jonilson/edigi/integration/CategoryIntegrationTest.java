@@ -69,4 +69,25 @@ public class CategoryIntegrationTest {
 
         assertEquals("Essa categoria já está cadastrado!", exception.getMessage());
     }
+
+    @Test
+    public void shouldThrowIllegalArgumentExceptionWithoutId() {
+        CategoryDao categoryDao = new CategoryDao(this.connection);
+
+        Category category = new Category("Infraestrutura");
+        categoryDao.add(category);
+
+        Exception exception = assertThrows(IllegalArgumentException.class, () -> categoryDao.findId(null));
+
+        assertEquals("Id não foi informado corretamente!", exception.getMessage());
+    }
+
+    @Test
+    public void shouldThrowRuntimeExceptionWithIdNonexistent() {
+        CategoryDao categoryDao = new CategoryDao(this.connection);
+
+        Exception exception = assertThrows(RuntimeException.class, () -> categoryDao.findId(1));
+
+        assertEquals("Erro ao buscar Categoria!", exception.getMessage());
+    }
 }

@@ -31,15 +31,7 @@ public class AuthorDao {
                 if (rst.next()) {
                     author.setId(rst.getInt(1));
 
-                    String query = "SELECT * FROM authors Where id = ?";
-                    try (PreparedStatement statementQuery = this.connection.prepareStatement(query)) {
-                        statementQuery.setInt(1, author.getId());
-                        ResultSet rs = statementQuery.executeQuery();
-
-                        while (rs.next()) {
-                            author.setCreatedAt(rs.getTimestamp("created_at").toLocalDateTime());
-                        }
-                    }
+                    author.setCreatedAt(this.findId(author.getId()).getCreatedAt());
 
                     System.out.println("Autor cadastrado com sucesso! \nDados do Autor:");
                     System.out.println("Nome: " + author.getName() + ", email: " + author.getEmail() + "\n");
@@ -74,5 +66,30 @@ public class AuthorDao {
         }
 
         return Collections.unmodifiableSet(authors);
+    }
+
+    public Author findId(Integer id) {
+        if (id == null || id <= 0) {
+            throw new IllegalArgumentException("Id não foi informado corretamente!");
+        }
+
+        String query = "SELECT * FROM authors Where id = ?";
+
+        try (PreparedStatement statementQuery = this.connection.prepareStatement(query)) {
+            statementQuery.setInt(1, id);
+            ResultSet rst = statementQuery.executeQuery();
+
+            if (rst.next()) {
+                return new Author(
+                        rst.getInt(1),
+                        rst.getString(2),
+                        rst.getString(3),
+                        rst.getTimestamp(4).toLocalDateTime());
+            }
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+
+        throw new RuntimeException("Erro ao buscar Autor!");
     }
 }

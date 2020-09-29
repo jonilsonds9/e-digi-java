@@ -404,4 +404,47 @@ public class BookIntegrationTest {
 
         assertEquals("Esse livro já está cadastrado!", exception.getMessage());
     }
+
+    @Test
+    public void shouldThrowIllegalArgumentExceptionWithoutId() {
+        BookDao bookDao = new BookDao(this.connection);
+        AuthorDao authorDao = new AuthorDao(this.connection);
+        CategoryDao categoryDao = new CategoryDao(this.connection);
+
+        Author author = new Author("ana", "ana@gmail.com");
+        authorDao.add(author);
+
+        Category category = new Category("Programação");
+        categoryDao.add(category);
+
+        Book book = new Book(
+                "Aplicações web real-time com Node.js",
+                "Node.js é uma poderosa plataforma. Ele permite escrever aplicações JavaScript no server-side, tirando proveito da sintaxe e familiaridade da linguagem para escrever aplicações web escaláveis. Como o Node.js usa um modelo orientado a eventos, focado em I/O não bloqueante, desenvolver nele pode ser diferente para quem está acostumado às aplicações web tradicionais. Neste livro, Caio Ribeiro Pereira quebra essa enorme barreira, mostrando claramente essa mudança de paradigma, além de focar em tópicos importantes, as APIs principais e frameworks como o Express e o Socket.IO.",
+                "1 Bem-vindo ao mundo Node.js" +
+                        " 1.1 O problema das arquiteturas bloqueantes" +
+                        " 1.2 E assim nasceu o Node.js" +
+                        " 1.3 Single-thread",
+                185,
+                "978-85-66250-14-5",
+                author,
+                category,
+                1,
+                29.90
+        );
+
+        bookDao.add(book);
+
+        Exception exception = assertThrows(IllegalArgumentException.class, () -> bookDao.findId(null));
+
+        assertEquals("Id não foi informado corretamente!", exception.getMessage());
+    }
+
+    @Test
+    public void shouldThrowRuntimeExceptionWithIdNonexistent() {
+        BookDao bookDao = new BookDao(this.connection);
+
+        Exception exception = assertThrows(RuntimeException.class, () -> bookDao.findId(1));
+
+        assertEquals("Erro ao buscar Livro!", exception.getMessage());
+    }
 }

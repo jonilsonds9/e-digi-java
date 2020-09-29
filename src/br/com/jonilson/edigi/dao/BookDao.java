@@ -47,15 +47,7 @@ public class BookDao {
                 if (rst.next()) {
                     book.setId(rst.getInt(1));
 
-                    String query = "SELECT * FROM books Where id = ?";
-                    try (PreparedStatement statementQuery = this.connection.prepareStatement(query)) {
-                        statementQuery.setInt(1, book.getId());
-                        ResultSet rs = statementQuery.executeQuery();
 
-                        while (rs.next()) {
-                            book.setCreatedAt(rs.getTimestamp("created_at").toLocalDateTime());
-                        }
-                    }
 
                     System.out.println("Livro cadastrado com sucesso! \nDados do Livro:");
                     System.out.println(book.infoBookToString());
@@ -69,9 +61,6 @@ public class BookDao {
     public Set<Book> list() {
         Set<Book> books = new HashSet<>();
 
-        Set<Author> authors = this.authorDao.list();
-        Set<Category> categories = this.categoryDao.list();
-
         String query = "SELECT * FROM books";
 
         try (PreparedStatement statement = this.connection.prepareStatement(query)) {
@@ -79,12 +68,6 @@ public class BookDao {
 
             try (ResultSet rst = statement.getResultSet()) {
                 while (rst.next()) {
-                    Integer authorId = rst.getInt("author_id");
-                    Integer categoryId = rst.getInt("category_id");
-
-                    Author author = authors.stream().filter(a -> a.getId().equals(authorId)).findFirst().get();
-                    Category category = categories.stream().filter(c -> c.getId().equals(categoryId)).findFirst().get();
-
                     Book book = new Book(
                             rst.getInt("id"),
                             rst.getString("title"),
@@ -92,8 +75,8 @@ public class BookDao {
                             rst.getString("summary"),
                             rst.getInt("number_pages"),
                             rst.getString("isbn"),
-                            author,
-                            category,
+                            this.authorDao.findId(rst.getInt("author_id")),
+                            this.categoryDao.findId(rst.getInt("category_id")),
                             rst.getInt("edition"),
                             rst.getDouble("price"),
                             rst.getTimestamp("created_at").toLocalDateTime()
@@ -122,5 +105,38 @@ public class BookDao {
         }
 
         return foundBooks;
+    }
+
+    public Book findId(Integer id) {
+        if (id == null || id <= 0) {
+            throw new IllegalArgumentException("Id não foi informado corretamente!");
+        }
+
+        String query = "SELECT * FROM books Where id = ?";
+
+        try (PreparedStatement statementQuery = this.connection.prepareStatement(query)) {
+            statementQuery.setInt(1, id);
+            ResultSet rst = statementQuery.executeQuery();
+
+            if (rst.next()) {
+                return new Book(
+                        rst.getInt("id"),
+                        rst.getString("title"),
+                        rst.getString("resume"),
+                        rst.getString("summary"),
+                        rst.getInt("number_pages"),
+                        rst.getString("isbn"),
+                        this.authorDao.findId(rst.getInt("author_id")),
+                        this.categoryDao.findId(rst.getInt("category_id")),
+                        rst.getInt("edition"),
+                        rst.getDouble("price"),
+                        rst.getTimestamp("created_at").toLocalDateTime()
+                );
+            }
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+
+        throw new RuntimeException("Erro ao buscar Livro!");
     }
 }
