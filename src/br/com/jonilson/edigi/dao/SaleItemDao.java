@@ -47,7 +47,7 @@ public class SaleItemDao {
                 while (rst.next()) {
                     Integer bookId = rst.getInt("book_id");
 
-                    Book book = books.stream().filter(b -> b.getId() == bookId).findFirst().get();
+                    Book book = books.stream().filter(b -> b.getId().equals(bookId)).findFirst().get();
 
                     SaleItem item = new SaleItem(book, rst.getInt(2));
                     item.setSaleId(rst.getInt("sale_id"));

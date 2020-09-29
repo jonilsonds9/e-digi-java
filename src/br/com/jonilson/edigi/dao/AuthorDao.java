@@ -31,9 +31,15 @@ public class AuthorDao {
                 if (rst.next()) {
                     author.setId(rst.getInt(1));
 
-                    Set<Author> authors = this.list();
-                    author.setCreatedAt(authors.stream()
-                            .filter(a -> a.getId() == author.getId()).findFirst().get().getCreatedAt());
+                    String query = "SELECT * FROM authors Where id = ?";
+                    try (PreparedStatement statementQuery = this.connection.prepareStatement(query)) {
+                        statementQuery.setInt(1, author.getId());
+                        ResultSet rs = statementQuery.executeQuery();
+
+                        while (rs.next()) {
+                            author.setCreatedAt(rs.getTimestamp("created_at").toLocalDateTime());
+                        }
+                    }
 
                     System.out.println("Autor cadastrado com sucesso! \nDados do Autor:");
                     System.out.println("Nome: " + author.getName() + ", email: " + author.getEmail() + "\n");

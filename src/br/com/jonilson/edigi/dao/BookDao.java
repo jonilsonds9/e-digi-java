@@ -47,9 +47,15 @@ public class BookDao {
                 if (rst.next()) {
                     book.setId(rst.getInt(1));
 
-                    Set<Book> books = this.list();
-                    book.setCreatedAt(books.stream()
-                            .filter(b -> b.getId() == book.getId()).findFirst().get().getCreatedAt());
+                    String query = "SELECT * FROM books Where id = ?";
+                    try (PreparedStatement statementQuery = this.connection.prepareStatement(query)) {
+                        statementQuery.setInt(1, book.getId());
+                        ResultSet rs = statementQuery.executeQuery();
+
+                        while (rs.next()) {
+                            book.setCreatedAt(rs.getTimestamp("created_at").toLocalDateTime());
+                        }
+                    }
 
                     System.out.println("Livro cadastrado com sucesso! \nDados do Livro:");
                     System.out.println(book.infoBookToString());
@@ -76,8 +82,8 @@ public class BookDao {
                     Integer authorId = rst.getInt("author_id");
                     Integer categoryId = rst.getInt("category_id");
 
-                    Author author = authors.stream().filter(a -> a.getId() == authorId).findFirst().get();
-                    Category category = categories.stream().filter(c -> c.getId() == categoryId).findFirst().get();
+                    Author author = authors.stream().filter(a -> a.getId().equals(authorId)).findFirst().get();
+                    Category category = categories.stream().filter(c -> c.getId().equals(categoryId)).findFirst().get();
 
                     Book book = new Book(
                             rst.getInt("id"),

@@ -32,9 +32,15 @@ public class CategoryDao {
                 if (rst.next()) {
                     category.setId(rst.getInt(1));
 
-                    Set<Category> categories = this.list();
-                    category.setCreatedAt(categories.stream()
-                            .filter(c -> c.getId() == category.getId()).findFirst().get().getCreatedAt());
+                    String query = "SELECT * FROM categories Where id = ?";
+                    try (PreparedStatement statementQuery = this.connection.prepareStatement(query)) {
+                        statementQuery.setInt(1, category.getId());
+                        ResultSet rs = statementQuery.executeQuery();
+
+                        while (rs.next()) {
+                            category.setCreatedAt(rs.getTimestamp("created_at").toLocalDateTime());
+                        }
+                    }
 
                     System.out.println("Categoria cadastrada com sucesso! \nDados da Categoria:");
                     System.out.println("Nome: " + category.getName() + "\n");
