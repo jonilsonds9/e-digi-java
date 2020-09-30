@@ -6,6 +6,7 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 public class Author {
+    private Integer id;
     private String name;
     private String email;
     private LocalDateTime createdAt;
@@ -14,6 +15,21 @@ public class Author {
         this.setName(name);
         this.setEmail(email);
         this.createdAt = LocalDateTime.now();
+    }
+
+    public Author(Integer id, String name, String email, LocalDateTime createdAt) {
+        this.setId(id);
+        this.setName(name);
+        this.setEmail(email);
+        this.setCreatedAt(createdAt);
+    }
+
+    public Integer getId() {
+        return id;
+    }
+
+    public void setId(Integer id) {
+        this.id = id;
     }
 
     public String getName() {
@@ -37,6 +53,14 @@ public class Author {
         }
 
         this.email = email;
+    }
+
+    public LocalDateTime getCreatedAt() {
+        return createdAt;
+    }
+
+    public void setCreatedAt(LocalDateTime createdAt) {
+        this.createdAt = createdAt;
     }
 
     private boolean validateEmail(String email) {

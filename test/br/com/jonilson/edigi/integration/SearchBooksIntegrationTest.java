@@ -1,53 +1,70 @@
-package br.com.jonilson.edigi;
+package br.com.jonilson.edigi.integration;
 
+import br.com.jonilson.edigi.dao.AuthorDao;
 import br.com.jonilson.edigi.dao.BookDao;
 import br.com.jonilson.edigi.dao.CategoryDao;
-import br.com.jonilson.edigi.dao.SaleDao;
-import br.com.jonilson.edigi.model.*;
+import br.com.jonilson.edigi.factory.ConnectionFactory;
+import br.com.jonilson.edigi.model.Author;
+import br.com.jonilson.edigi.model.Book;
+import br.com.jonilson.edigi.model.Category;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-import java.util.Set;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.SQLException;
+import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-public class SaleTest {
+public class SearchBooksIntegrationTest {
 
-    @Test
-    public void itShouldMakeASaleWithOnlyOneItem() {
-        SaleDao saleDao = new SaleDao();
+    public ConnectionFactory connectionFactory = new ConnectionFactory();
+    public Connection connection;
 
-        Author author = new Author("ana", "ana@gmail.com");
-        Category category = new Category("Programação");
-        Book book = new Book(
-                "Aplicações web real-time com Node.js",
-                "Node.js é uma poderosa plataforma. Ele permite escrever aplicações JavaScript no server-side, tirando proveito da sintaxe e familiaridade da linguagem para escrever aplicações web escaláveis. Como o Node.js usa um modelo orientado a eventos, focado em I/O não bloqueante, desenvolver nele pode ser diferente para quem está acostumado às aplicações web tradicionais. Neste livro, Caio Ribeiro Pereira quebra essa enorme barreira, mostrando claramente essa mudança de paradigma, além de focar em tópicos importantes, as APIs principais e frameworks como o Express e o Socket.IO.",
-                "1 Bem-vindo ao mundo Node.js" +
-                        " 1.1 O problema das arquiteturas bloqueantes" +
-                        " 1.2 E assim nasceu o Node.js" +
-                        " 1.3 Single-thread",
-                185,
-                "978-85-66250-14-5",
-                author,
-                category,
-                1,
-                29.90
-        );
+    @BeforeEach
+    public void getConnection() {
+        this.connection = this.connectionFactory.getConnection();
+    }
 
-        SaleItem item = new SaleItem(book, 3);
+    @AfterEach
+    public void closeConnection() {
+        String deleteAllBooks = "DELETE FROM books";
+        try (PreparedStatement statement = this.connection.prepareStatement(deleteAllBooks)) {
+            statement.execute();
+        } catch (SQLException e) {
+            throw new IllegalArgumentException(e);
+        }
 
-        Sale sale = new Sale(item);
+        String deleteAllAuthors = "DELETE FROM authors";
+        try (PreparedStatement statement = this.connection.prepareStatement(deleteAllAuthors)) {
+            statement.execute();
+        } catch (SQLException e) {
+            throw new IllegalArgumentException(e);
+        }
 
-        saleDao.add(sale);
+        String deleteAllCategories = "DELETE FROM categories";
+        try (PreparedStatement statement = this.connection.prepareStatement(deleteAllCategories)) {
+            statement.execute();
+        } catch (SQLException e) {
+            throw new IllegalArgumentException(e);
+        }
 
-        assertTrue(saleDao.list().contains(sale));
+        this.connectionFactory.closeConnection(this.connection);
     }
 
     @Test
-    public void itShouldMakeASaleWithTwoItem() {
-        SaleDao saleDao = new SaleDao();
+    public void shouldShowBooks() {
+        BookDao bookDao = new BookDao(this.connection);
+        AuthorDao authorDao = new AuthorDao(this.connection);
+        CategoryDao categoryDao = new CategoryDao(this.connection);
 
         Author author = new Author("ana", "ana@gmail.com");
+        authorDao.add(author);
+
         Category category = new Category("Programação");
+        categoryDao.add(category);
 
         Book book1 = new Book(
                 "Aplicações web real-time com Node.js",
@@ -79,31 +96,29 @@ public class SaleTest {
                 32.90
         );
 
-        SaleItem item1 = new SaleItem(book1, 2);
-        SaleItem item2 = new SaleItem(book2, 1);
+        bookDao.add(book1);
+        bookDao.add(book2);
 
-        Sale sale = new Sale(item1);
-        sale.addItem(item2);
+        List<Book> result = bookDao.searchBooks("Apli");
 
-        saleDao.add(sale);
-
-        assertTrue(saleDao.list().contains(sale));
+        assertEquals(2, result.size());
+        assertTrue(result.contains(book1));
+        assertTrue(result.contains(book2));
     }
 
     @Test
-    public void itShouldNotCreateSaleItemWithNullBook() {
-        Exception exception = assertThrows(IllegalArgumentException.class, () ->
-            new SaleItem(null, 3)
-        );
+    public void NotShowBooksWithTitleWithLessThanTwoCharacters() {
+        BookDao bookDao = new BookDao(this.connection);
+        AuthorDao authorDao = new AuthorDao(this.connection);
+        CategoryDao categoryDao = new CategoryDao(this.connection);
 
-        assertEquals("Livro não informado corretamente!", exception.getMessage());
-    }
+        Author author = new Author("ana", "ana@gmail.com");
+        authorDao.add(author);
 
-    @Test
-    public void itShouldNotCreateSaleItemWithQuantityZero() {
+        Category category = new Category("Programação");
+        categoryDao.add(category);
+
         Exception exception = assertThrows(IllegalArgumentException.class, () -> {
-            Author author = new Author("ana", "ana@gmail.com");
-            Category category = new Category("Programação");
             Book book = new Book(
                     "Aplicações web real-time com Node.js",
                     "Node.js é uma poderosa plataforma. Ele permite escrever aplicações JavaScript no server-side, tirando proveito da sintaxe e familiaridade da linguagem para escrever aplicações web escaláveis. Como o Node.js usa um modelo orientado a eventos, focado em I/O não bloqueante, desenvolver nele pode ser diferente para quem está acostumado às aplicações web tradicionais. Neste livro, Caio Ribeiro Pereira quebra essa enorme barreira, mostrando claramente essa mudança de paradigma, além de focar em tópicos importantes, as APIs principais e frameworks como o Express e o Socket.IO.",
@@ -119,27 +134,29 @@ public class SaleTest {
                     29.90
             );
 
-            new SaleItem(book, 0);
+            bookDao.add(book);
+
+            bookDao.searchBooks("A");
         });
 
-        assertEquals("A quantidade precisa ser pelo menos 1!", exception.getMessage());
+        assertEquals("O título precisa conter pelo menos 2 caracteres!", exception.getMessage());
     }
 
     @Test
-    public void itShouldNotCreateSaleWithNullItem() {
-        Exception exception = assertThrows(IllegalArgumentException.class, () ->
-            new Sale(null)
-        );
+    public void shouldNotShowBooksIifNoneAreFound() {
+        BookDao bookDao = new BookDao(this.connection);
+        AuthorDao authorDao = new AuthorDao(this.connection);
+        CategoryDao categoryDao = new CategoryDao(this.connection);
 
-        assertEquals("Item da venda não informado corretamente!", exception.getMessage());
-    }
+        Author author = new Author("ana", "ana@gmail.com");
+        authorDao.add(author);
 
-    @Test
-    public void itShouldNotAddSaleItemNull() {
+        Category category = new Category("Programação");
+        categoryDao.add(category);
+
         Exception exception = assertThrows(IllegalArgumentException.class, () -> {
-            Author author = new Author("ana", "ana@gmail.com");
-            Category category = new Category("Programação");
-            Book book = new Book(
+
+            Book book1 = new Book(
                     "Aplicações web real-time com Node.js",
                     "Node.js é uma poderosa plataforma. Ele permite escrever aplicações JavaScript no server-side, tirando proveito da sintaxe e familiaridade da linguagem para escrever aplicações web escaláveis. Como o Node.js usa um modelo orientado a eventos, focado em I/O não bloqueante, desenvolver nele pode ser diferente para quem está acostumado às aplicações web tradicionais. Neste livro, Caio Ribeiro Pereira quebra essa enorme barreira, mostrando claramente essa mudança de paradigma, além de focar em tópicos importantes, as APIs principais e frameworks como o Express e o Socket.IO.",
                     "1 Bem-vindo ao mundo Node.js" +
@@ -154,12 +171,27 @@ public class SaleTest {
                     29.90
             );
 
-            SaleItem item = new SaleItem(book, 3);
+            Book book2 = new Book(
+                    "Aplicações com PHP",
+                    "Node.js é uma poderosa plataforma. Ele permite escrever aplicações JavaScript no server-side, tirando proveito da sintaxe e familiaridade da linguagem para escrever aplicações web escaláveis. Como o Node.js usa um modelo orientado a eventos, focado em I/O não bloqueante, desenvolver nele pode ser diferente para quem está acostumado às aplicações web tradicionais. Neste livro, Caio Ribeiro Pereira quebra essa enorme barreira, mostrando claramente essa mudança de paradigma, além de focar em tópicos importantes, as APIs principais e frameworks como o Express e o Socket.IO.",
+                    "1 Bem-vindo ao mundo Node.js" +
+                            " 1.1 O problema das arquiteturas bloqueantes" +
+                            " 1.2 E assim nasceu o Node.js" +
+                            " 1.3 Single-thread",
+                    143,
+                    "978-85-66250-14-6",
+                    author,
+                    category,
+                    1,
+                    32.90
+            );
 
-            Sale sale = new Sale(item);
-            sale.addItem(null);
+            bookDao.add(book1);
+            bookDao.add(book2);
+
+            bookDao.searchBooks("Testes automatizados");
         });
 
-        assertEquals("Item da venda não informado corretamente!", exception.getMessage());
+        assertEquals("Nenhum livro encontrado!", exception.getMessage());
     }
 }

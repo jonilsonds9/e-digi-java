@@ -7,6 +7,7 @@ import java.util.regex.Pattern;
 
 public class Book {
 
+    private Integer id;
     private String title;
     private String resume;
     private String summary;
@@ -33,6 +34,30 @@ public class Book {
         this.createdAt = LocalDateTime.now();
     }
 
+    public Book(Integer id, String title, String resume, String summary, int numberPages,
+                String isbn, Author author, Category category, int edition, double price,
+                LocalDateTime createdAt) {
+        this.setId(id);
+        this.setTitle(title);
+        this.setResume(resume);
+        this.setSummary(summary);
+        this.setNumberPages(numberPages);
+        this.setIsbn(isbn);
+        this.setAuthor(author);
+        this.setCategory(category);
+        this.setEdition(edition);
+        this.setPrice(price);
+        this.setCreatedAt(createdAt);
+    }
+
+    public Integer getId() {
+        return id;
+    }
+
+    public void setId(Integer id) {
+        this.id = id;
+    }
+
     public String getTitle() {
         return this.title;
     }
@@ -44,11 +69,19 @@ public class Book {
         this.title = title;
     }
 
+    public String getResume() {
+        return resume;
+    }
+
     private void setResume(String resume) {
         if (resume == null || resume.trim().isEmpty() || resume.length() < 500) {
             throw new IllegalArgumentException("O resumo é obrigatório e precisa ter pelo menos 500 caracteres!");
         }
         this.resume = resume;
+    }
+
+    public String getSummary() {
+        return summary;
     }
 
     private void setSummary(String summary) {
@@ -58,11 +91,19 @@ public class Book {
         this.summary = summary;
     }
 
+    public int getNumberPages() {
+        return numberPages;
+    }
+
     private void setNumberPages(int numberPages) {
         if (numberPages <= 0) {
             throw new IllegalArgumentException("O número de página precisa ser maior que zero!");
         }
         this.numberPages = numberPages;
+    }
+
+    public String getIsbn() {
+        return isbn;
     }
 
     private void setIsbn(String isbn) {
@@ -83,11 +124,19 @@ public class Book {
         this.author = author;
     }
 
+    public Category getCategory() {
+        return category;
+    }
+
     private void setCategory(Category category) {
         if (category == null) {
             throw new IllegalArgumentException("Categoria não informada corretamente!");
         }
         this.category = category;
+    }
+
+    public int getEdition() {
+        return edition;
     }
 
     private void setEdition(int edition) {
@@ -97,6 +146,10 @@ public class Book {
         this.edition = edition;
     }
 
+    public double getPrice() {
+        return this.price;
+    }
+
     private void setPrice(double price) {
         if (price < 0) {
             throw new IllegalArgumentException("O preço deve ser um número positivo!");
@@ -104,12 +157,12 @@ public class Book {
         this.price = price;
     }
 
-    public double getPrice() {
-        return this.price;
-    }
-
     public LocalDateTime getCreatedAt() {
         return this.createdAt;
+    }
+
+    public void setCreatedAt(LocalDateTime createdAt) {
+        this.createdAt = createdAt;
     }
 
     private boolean isIsbnValid(String isbn) {
@@ -122,21 +175,6 @@ public class Book {
 
     public String infoBookToString() {
         return "Autor: " + this.author.getName() + "\nLivro: " + this.title + "\nCadastrado em: " + this.createdAt + "\n";
-    }
-
-    @Override
-    public String toString() {
-        return "Book{" +
-                "title='" + this.title + '\'' +
-                ", \nresume='" + this.resume + '\'' +
-                ", \nsummary='" + this.summary + '\'' +
-                ", \nnumberPages=" + this.numberPages +
-                ", \nisbn='" + this.isbn + '\'' +
-                ", \nauthor=" + this.author +
-                ", \ncategory=" + this.category +
-                ", \nedition=" + this.edition +
-                ", \nprice=" + this.price +
-                '}';
     }
 
     @Override
