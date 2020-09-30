@@ -1,6 +1,5 @@
 package br.com.jonilson.edigi.dao;
 
-import br.com.jonilson.edigi.model.Author;
 import br.com.jonilson.edigi.model.Category;
 
 import java.sql.*;
@@ -32,7 +31,7 @@ public class CategoryDao {
                 if (rst.next()) {
                     category.setId(rst.getInt(1));
 
-                    category.setCreatedAt(this.findId(category.getId()).getCreatedAt());
+                    category.setCreatedAt(this.findById(category.getId()).getCreatedAt());
 
                     System.out.println("Categoria cadastrada com sucesso! \nDados da Categoria:");
                     System.out.println("Nome: " + category.getName() + "\n");
@@ -68,7 +67,7 @@ public class CategoryDao {
         return Collections.unmodifiableSet(categories);
     }
 
-    public Category findId(Integer id) {
+    public Category findById(Integer id) {
         if (id == null || id <= 0) {
             throw new IllegalArgumentException("Id não foi informado corretamente!");
         }

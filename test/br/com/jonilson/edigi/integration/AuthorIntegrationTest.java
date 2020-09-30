@@ -87,7 +87,7 @@ public class AuthorIntegrationTest {
         Author author = new Author("ana", "ana@gmail.com");
         authorDao.add(author);
 
-        Exception exception = assertThrows(IllegalArgumentException.class, () -> authorDao.findId(null));
+        Exception exception = assertThrows(IllegalArgumentException.class, () -> authorDao.findById(null));
 
         assertEquals("Id não foi informado corretamente!", exception.getMessage());
     }
@@ -96,7 +96,7 @@ public class AuthorIntegrationTest {
     public void shouldThrowRuntimeExceptionWithIdNonexistent() {
         AuthorDao authorDao = new AuthorDao(this.connection);
 
-        Exception exception = assertThrows(RuntimeException.class, () -> authorDao.findId(1));
+        Exception exception = assertThrows(RuntimeException.class, () -> authorDao.findById(1));
 
         assertEquals("Erro ao buscar Autor!", exception.getMessage());
     }

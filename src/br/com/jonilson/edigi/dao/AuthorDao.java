@@ -31,7 +31,7 @@ public class AuthorDao {
                 if (rst.next()) {
                     author.setId(rst.getInt(1));
 
-                    author.setCreatedAt(this.findId(author.getId()).getCreatedAt());
+                    author.setCreatedAt(this.findById(author.getId()).getCreatedAt());
 
                     System.out.println("Autor cadastrado com sucesso! \nDados do Autor:");
                     System.out.println("Nome: " + author.getName() + ", email: " + author.getEmail() + "\n");
@@ -68,7 +68,7 @@ public class AuthorDao {
         return Collections.unmodifiableSet(authors);
     }
 
-    public Author findId(Integer id) {
+    public Author findById(Integer id) {
         if (id == null || id <= 0) {
             throw new IllegalArgumentException("Id não foi informado corretamente!");
         }

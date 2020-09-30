@@ -1,8 +1,6 @@
 package br.com.jonilson.edigi.dao;
 
-import br.com.jonilson.edigi.model.Author;
 import br.com.jonilson.edigi.model.Book;
-import br.com.jonilson.edigi.model.Category;
 
 import java.sql.*;
 import java.util.Collections;
@@ -75,8 +73,8 @@ public class BookDao {
                             rst.getString("summary"),
                             rst.getInt("number_pages"),
                             rst.getString("isbn"),
-                            this.authorDao.findId(rst.getInt("author_id")),
-                            this.categoryDao.findId(rst.getInt("category_id")),
+                            this.authorDao.findById(rst.getInt("author_id")),
+                            this.categoryDao.findById(rst.getInt("category_id")),
                             rst.getInt("edition"),
                             rst.getDouble("price"),
                             rst.getTimestamp("created_at").toLocalDateTime()
@@ -107,7 +105,7 @@ public class BookDao {
         return foundBooks;
     }
 
-    public Book findId(Integer id) {
+    public Book findById(Integer id) {
         if (id == null || id <= 0) {
             throw new IllegalArgumentException("Id não foi informado corretamente!");
         }
@@ -126,8 +124,8 @@ public class BookDao {
                         rst.getString("summary"),
                         rst.getInt("number_pages"),
                         rst.getString("isbn"),
-                        this.authorDao.findId(rst.getInt("author_id")),
-                        this.categoryDao.findId(rst.getInt("category_id")),
+                        this.authorDao.findById(rst.getInt("author_id")),
+                        this.categoryDao.findById(rst.getInt("category_id")),
                         rst.getInt("edition"),
                         rst.getDouble("price"),
                         rst.getTimestamp("created_at").toLocalDateTime()

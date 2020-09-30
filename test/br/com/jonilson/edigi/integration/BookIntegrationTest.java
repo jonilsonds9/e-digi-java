@@ -434,7 +434,7 @@ public class BookIntegrationTest {
 
         bookDao.add(book);
 
-        Exception exception = assertThrows(IllegalArgumentException.class, () -> bookDao.findId(null));
+        Exception exception = assertThrows(IllegalArgumentException.class, () -> bookDao.findById(null));
 
         assertEquals("Id não foi informado corretamente!", exception.getMessage());
     }
@@ -443,7 +443,7 @@ public class BookIntegrationTest {
     public void shouldThrowRuntimeExceptionWithIdNonexistent() {
         BookDao bookDao = new BookDao(this.connection);
 
-        Exception exception = assertThrows(RuntimeException.class, () -> bookDao.findId(1));
+        Exception exception = assertThrows(RuntimeException.class, () -> bookDao.findById(1));
 
         assertEquals("Erro ao buscar Livro!", exception.getMessage());
     }
